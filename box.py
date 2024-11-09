@@ -13,7 +13,7 @@ def main():
     # follow game logic, recursively test each path
     for side in sides: 
         for letter in side:
-            discoverWords([letter], puzzle, 0) 
+            discoverWord([letter], puzzle, 0) 
 
     '''
     every new letter that's considered
@@ -30,24 +30,40 @@ def main():
 
     '''
 
-def discoverWords(letters, puzzle, position):
+def discoverWord(letters, puzzle, position):
     # BASE CASE: if the letters in a word lead it down a path in the dictTree that doesn't exist, return false
 
     # if letters form a complete word, add word to wordBank (but do not return!)
         # (a complete word is a word whose letters lead it to a leaf in the dictionary tree)
 
-    # obtain next letter
-        # jump to next possible side and iterate through its letters
-        # position += 1
-        # while ((currentIndex + 1) % 12) // 3 != currentIndex // 3
-        # ...no
-        # 
-        # nextPosition = (position + 3) // 3
-    # discoverWords(letters + puzzle[nextPos], puzzle, nextPos)
+    # test 9 possible next letter options
+    for i in range(position, position + 12):
+        nextPos = next(position)
+
+    discoverWord(letters + puzzle[nextPos], puzzle, nextPos)
     pass
 
 # return next valid letter position (going clockwise)
-def next(n): 
-    if ((n + 1) % 12) // 3 == n // 3:
+def next(current): 
+    n = current % 12
+    if (n + 1) // 3 == n // 3:
         return (n + 3) // 3
     return (n + 1) % 12
+
+    # 0 3
+    # 1 3
+    # 2 3
+    # 3 6
+    # 4 6
+    # 5 6
+    # 6 9
+    # 7 9
+    # 8 9
+    # 9 0
+    # 10 0
+    # 11 0
+    
+    # nextPossible:
+        # if 0, 1, or 2 you can only select 3-11
+        # or you must "round up" to the next side then iterate numerically from there
+        # I think this is the key: ((n+3) // 3) * 3
