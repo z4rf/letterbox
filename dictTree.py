@@ -31,4 +31,23 @@ class dictTree:
         "z": None
     }
 
+    leaf = False
+    valid = False
+
+    def wordIsLeaf(word):
+        # traverse down word tree and check if where you land is a leaf
+        pass
     
+    def wordIsValid(word):
+        # similar but not the same.  if node you land on is the end of a valid word, return true.  does not indicate anything about leaf status though
+        # this function must also not crash when word is nonsense (handle null pointer errors!)
+        pass
+
+    def buildDict(filename):
+
+        with open(filename) as file:
+            for word in file:
+                addToTree(word)
+    
+    def addToTree(word):
+        

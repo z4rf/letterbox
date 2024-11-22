@@ -1,11 +1,13 @@
-# initial thoughts
+import dictTree
 
+list = dictTree()
 puzzle = ""
 
 def main():
 
     # dictionary file
     #     iterate through and create a 26 node tree
+    list.buildDict("words_alpha.txt")
 
     # ingest puzzle sides
     puzzle = input("Enter puzzle letters, begin from top left corner: ")
@@ -32,11 +34,11 @@ def main():
     '''
 
 def discoverWord(word, position):
-    if (wordIsValid(word)):
-        addToWordList(word) # if we want leafs only, move this to the next if
+    if (list.wordIsValid(word)):
+        list.ddToWordList(word) # if we want leafs only, move this to the next if
     else:
         return
-    if (wordIsLeaf(word)):
+    if (list.wordIsLeaf(word)):
         return
 
     # snap position to next side
@@ -57,29 +59,3 @@ def discoverWord(word, position):
 # wordIsValid(): similar but not the same.  if node you land on is the end of a valid word, return true.  does not indicate anything about leaf status though
     # this function must also not crash when word is nonsense (handle null pointer errors!)
 # this is hard.  leafs are always valid.  but valid words are not always leafs.  
-
-
-# return next valid letter position (going clockwise)
-def next(current): 
-    n = current % 12
-    if (n + 1) // 3 == n // 3:
-        return (n + 3) // 3
-    return (n + 1) % 12
-
-    # 0 3
-    # 1 3
-    # 2 3
-    # 3 6
-    # 4 6
-    # 5 6
-    # 6 9
-    # 7 9
-    # 8 9
-    # 9 0
-    # 10 0
-    # 11 0
-    
-    # nextPossible:
-        # if 0, 1, or 2 you can only select 3-11
-        # or you must "round up" to the next side then iterate numerically from there
-        # I think this is the key: ((n+3) // 3) * 3
