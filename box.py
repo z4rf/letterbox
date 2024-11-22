@@ -2,6 +2,7 @@ import node
 
 list = node()
 puzzle = ""
+viableWords = []
 
 def main():
 
@@ -11,11 +12,10 @@ def main():
 
     # ingest puzzle sides
     puzzle = input("Enter puzzle letters, begin from top left corner: ")
-    sides = [puzzle[0:3], puzzle[3:6], puzzle[6:9], puzzle[9:12]]
 
     # follow game logic, recursively test each path
-    for side in sides: 
-        discoverWord([letter], puzzle, 0) 
+    for i in range (0, 12):
+        discoverWord(puzzle[i], i)
 
     '''
     every new letter that's considered
@@ -33,12 +33,10 @@ def main():
     '''
 
 def discoverWord(word, position):
-    if not list.wordIsValid(word):
+    if not list.letterExists(word):
         return
-    else:
-        list.addToWordList(word) # if we want leafs only, move this to the next if
     if (list.wordIsLeaf(word)):
-        return
+        viableWords.add(word)
 
     # snap position to next side
     position = ((position + 3) // 3) * 3
@@ -84,14 +82,17 @@ def wordIsLeaf(word):
         current = current.next[index]
     return current.isLeaf
 
-def wordIsValid(word):
+def letterExists(wor):
     # similar but not the same.  if node you land on is the end of a valid word, return true.  does not indicate anything about leaf status though
     # this function must also not crash when word is nonsense (handle null pointer errors!)
     # traverse down word tree and check if where you land is a leaf
+    # Note: words that are passed in here will frequently be partial words, hence 'wor'
     current = list 
-    for letter in word:
+    for letter in wor:
         index = ord(letter) - ord('a')
         if not current.next[index]:
             return False
         current = current.next[index]
     return current != None
+
+# RAMIN: tweak discoverWord to deal with the fact that leafs can have children in this implementation
