@@ -1,0 +1,9 @@
+the challenge: 
+
+be able to plug in the 12 letters around the perimeter of a letterboxd game and have the game spit out a valid answer 
+
+how will it be done? we'll find out 
+
+
+I know there's a similar blog post that does this (link here) but I didn't refer to it while making this I just saw it and saved the link but didn't read it at all.  source: here's a scan of my brain immediately after finding the blog post (link to MIB or donkey brain or something else stupid)
+for real though I did not read it at all I'm going in blind
