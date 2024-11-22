@@ -64,13 +64,9 @@ def discoverWord(word, position):
 def buildDict(filename):
     with open(filename) as file:
         for word in file:
-            for i in range(len(word)):
-                if (i == len(word) - 1):
-                    insert(list, word[i], True)
-                else:
-                    insert(list, word[i], False)
+            insert(list, word)
 
-def insert(root, letter, leaf):
+def insert(root, word, leaf):
     pass
 
 def wordIsLeaf(word):
