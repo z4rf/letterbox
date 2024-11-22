@@ -15,8 +15,7 @@ def main():
 
     # follow game logic, recursively test each path
     for side in sides: 
-        for letter in side:
-            discoverWord([letter], puzzle, 0) 
+        discoverWord([letter], puzzle, 0) 
 
     '''
     every new letter that's considered
@@ -34,10 +33,10 @@ def main():
     '''
 
 def discoverWord(word, position):
-    if (list.wordIsValid(word)):
-        list.ddToWordList(word) # if we want leafs only, move this to the next if
-    else:
+    if not list.wordIsValid(word):
         return
+    else:
+        list.addToWordList(word) # if we want leafs only, move this to the next if
     if (list.wordIsLeaf(word)):
         return
 
@@ -64,16 +63,35 @@ def discoverWord(word, position):
 def buildDict(filename):
     with open(filename) as file:
         for word in file:
-            insert(list, word)
+            insert(word)
 
-def insert(root, word, leaf):
-    pass
+def insert(word):
+    current = list 
+    for letter in word:
+        index = ord(letter) - ord('a')
+        if not current.next[index]:
+            current.next[index] = node()
+            current = current.next[index]
+    current.isLeaf = True
 
 def wordIsLeaf(word):
     # traverse down word tree and check if where you land is a leaf
-    pass
+    current = list 
+    for letter in word:
+        index = ord(letter) - ord('a')
+        if not current.next[index]:
+            return False
+        current = current.next[index]
+    return current.isLeaf
 
 def wordIsValid(word):
     # similar but not the same.  if node you land on is the end of a valid word, return true.  does not indicate anything about leaf status though
     # this function must also not crash when word is nonsense (handle null pointer errors!)
-    pass
+    # traverse down word tree and check if where you land is a leaf
+    current = list 
+    for letter in word:
+        index = ord(letter) - ord('a')
+        if not current.next[index]:
+            return False
+        current = current.next[index]
+    return current != None
