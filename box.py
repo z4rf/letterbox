@@ -1,6 +1,6 @@
-import dictTree
+import node
 
-list = dictTree()
+list = node()
 puzzle = ""
 
 def main():
@@ -59,3 +59,25 @@ def discoverWord(word, position):
 # wordIsValid(): similar but not the same.  if node you land on is the end of a valid word, return true.  does not indicate anything about leaf status though
     # this function must also not crash when word is nonsense (handle null pointer errors!)
 # this is hard.  leafs are always valid.  but valid words are not always leafs.  
+
+
+def buildDict(filename):
+    with open(filename) as file:
+        for word in file:
+            for i in range(len(word)):
+                if (i == len(word) - 1):
+                    insert(list, word[i], True)
+                else:
+                    insert(list, word[i], False)
+
+def insert(root, letter, leaf):
+    pass
+
+def wordIsLeaf(word):
+    # traverse down word tree and check if where you land is a leaf
+    pass
+
+def wordIsValid(word):
+    # similar but not the same.  if node you land on is the end of a valid word, return true.  does not indicate anything about leaf status though
+    # this function must also not crash when word is nonsense (handle null pointer errors!)
+    pass
