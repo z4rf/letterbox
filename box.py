@@ -1,5 +1,6 @@
 # initial thoughts
 
+puzzle = ""
 
 def main():
 
@@ -30,18 +31,33 @@ def main():
 
     '''
 
-def discoverWord(letters, puzzle, position):
-    # BASE CASE: if the letters in a word lead it down a path in the dictTree that doesn't exist, return false
+def discoverWord(word, position):
+    if (wordIsValid(word)):
+        addToWordList(word) # if we want leafs only, move this to the next if
+    else:
+        return
+    if (wordIsLeaf(word)):
+        return
 
-    # if letters form a complete word, add word to wordBank (but do not return!)
-        # (a complete word is a word whose letters lead it to a leaf in the dictionary tree)
+    # snap position to next side
+    position = ((position + 3) // 3) * 3
 
-    # test 9 possible next letter options
-    for i in range(position, position + 12):
-        nextPos = next(position)
+    # try 9 valid choices for next letter
+    for i in range(position, (position + 9) % 12):
+        discoverWord(word + puzzle[i], i)
 
-    discoverWord(letters + puzzle[nextPos], puzzle, nextPos)
-    pass
+# word tree:
+# 26-tree
+# each node has:
+    # 26 childeren nodes
+    # boolean (leaf or not)
+    # boolean (valid or not, does not indicate anything about childeren)
+# functions:
+# wordIsLeaf(): traverse down tree, if node you landed on is a leaf return true
+# wordIsValid(): similar but not the same.  if node you land on is the end of a valid word, return true.  does not indicate anything about leaf status though
+    # this function must also not crash when word is nonsense (handle null pointer errors!)
+# this is hard.  leafs are always valid.  but valid words are not always leafs.  
+
 
 # return next valid letter position (going clockwise)
 def next(current): 
