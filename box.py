@@ -23,12 +23,8 @@ def main():
         discoverWord(puzzle[i], i, puzzle)
 
     print(f"list of viable words: {viableWords}")
+    
     '''
-    every new letter that's considered
-        check if path exists for it in dictionary tree 
-    if a word is discovered, add it to a word bank
-
-    make array of answers
     with the word bank
         pop first word from wordlist, add to word array
         grab last letter of first word
@@ -39,12 +35,9 @@ def main():
     '''
 
 def discoverWord(word, position, puzzle):
-    # print(f"discoverWord: trying word {word}...")
     if not letterExists(word):
-        # print(f"not a real word: {word}\n")
         return
     if (wordIsLeaf(word)):
-        print(f"real word found: {word}!")
         viableWords.append(word)
 
     # snap position to next side
@@ -52,7 +45,6 @@ def discoverWord(word, position, puzzle):
 
     # try 9 valid choices for next letter
     for i in range(position, position + 9):
-        # pdb.set_trace()
         discoverWord(word + puzzle[i%12], i%12, puzzle)
 
 # word tree:
@@ -72,22 +64,18 @@ def buildDict(filename):
     counter = 0
     with open(filename) as file:
         for word in file:
-            if counter % 10000 == 0: print(f"inserting {counter}th word {word.rstrip()} into trie...")
+            if counter % 10000 == 0: print(f"inserting {'{:,}'.format(counter)}th word {word.rstrip()} into trie...")
             insert(word.rstrip())
             counter += 1
 
 def insert(word):
-    # pdb.set_trace()
     current = list 
     for letter in word:
-        # print(f"current letter: {letter}")
         index = ord(letter) - ord('a')
-        # print(f"index: {index}")
         if not current.next[index]:
             current.next[index] = node()
-        current = current.next[index]   # the fucking culprit
+        current = current.next[index]
     current.leaf = True
-    # print(f"inserted word {word}")
 
 def wordIsLeaf(word):
     # traverse down word tree and check if where you land is a leaf
@@ -104,23 +92,13 @@ def letterExists(wor):
     # this function must also not crash when word is nonsense (handle null pointer errors!)
     # traverse down word tree and check if where you land is a leaf
     # Note: words that are passed in here will frequently be partial words, hence 'wor'
-    counter = 0
     current = list 
-    # pdb.set_trace()
     for letter in wor:
-        counter += 1
-        # print(f"letterExists: iteration: {counter}")
         index = ord(letter) - ord('a')
-        # print(f"current letter: {chr(index + ord('a'))}")
         if not current.next[index]:
-            # print(f"word fails at: {current}")
             return False
         current = current.next[index]
     return current != None
-
-
-
-# RAMIN: tweak discoverWord to deal with the fact that leafs can have children in this implementation
 
 main()
 
