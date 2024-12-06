@@ -6,7 +6,7 @@ class node:
         self.next = [None] * 26
         self.leaf = False
 
-list = node()
+dictionary = node()
 puzzle = ""
 viableWords = []
 solutions = []
@@ -32,19 +32,21 @@ def main():
         print(f"trying chains of length {i}...")
         for word in viableWords:
             findChain([word], viableWords, i, puzzle)
+        if len(solutions) > 0:
+            break
     
-    print("all solutions found:")
+    print("shortest solutions found:")
 
     # pdb.set_trace()
     tupleList = []
     for tempList in solutions:
         tempList.sort()
-        tupleList.append(tuple(list))
+        tupleList.append(tuple(tempList))
 
     
     finalList = list(set(tupleList))
 
-    print(f"FINAL LIST OF SOLUTIONS: {str(finalList)}")
+    print(f"FINAL LIST OF SHORTEST SOLUTIONS: {str(finalList)}")
 
     
 
@@ -72,7 +74,7 @@ def buildDict(filename):
 
 # insert word into trie
 def insert(word):
-    current = list 
+    current = dictionary 
     for letter in word:
         index = ord(letter) - ord('a')
         if not current.next[index]:
@@ -83,7 +85,7 @@ def insert(word):
 
 # traverse down word tree and check if where you land is a leaf
 def wordIsLeaf(word):
-    current = list 
+    current = dictionary 
     for letter in word:
         index = ord(letter) - ord('a')
         if not current.next[index]:
@@ -96,7 +98,7 @@ def wordIsLeaf(word):
 # nonsense (handle null pointer errors!)
 # Note: words that are passed in here will frequently be partial words, hence 'wor'
 def letterExists(wor):
-    current = list 
+    current = dictionary 
     for letter in wor:
         index = ord(letter) - ord('a')
         if not current.next[index]:
