@@ -1,4 +1,5 @@
 import pdb
+import time
 
 class node:
     def __init__(self): 
@@ -8,14 +9,18 @@ class node:
 list = node()
 puzzle = ""
 viableWords = []
+solutions = []
 
 def main():
 
     # wordlist sourced from: https://github.com/dwyl/english-words
-    buildDict("words_alpha.txt")
+    buildDict("popular.txt")
 
     # ingest puzzle sides
-    puzzle = input("Enter puzzle letters, begin from top left corner: ")
+    # puzzle = input("Enter puzzle letters, begin from top left corner: ")
+    puzzle = "tlqsrubfiemo"
+    # numWords = input("Enter maximum number of words allowed in guess: ")
+    numWords = 4
 
     # follow game logic, recursively test each path
     for i in range (0, 12):
@@ -23,15 +28,25 @@ def main():
 
     print(f"list of viable words: {viableWords}")
     
-    '''
-    with the word bank
-        pop first word from wordlist, add to word array
-        grab last letter of first word
-        iterate through rest of list
-    no no no no, it's gonna need to be recursive
-    this might take some more thought than expected
+    for i in range(0, numWords):
+        print(f"trying chains of length {i}...")
+        for word in viableWords:
+            findChain([word], viableWords, i, puzzle)
+    
+    print("all solutions found:")
 
-    '''
+    # pdb.set_trace()
+    tupleList = []
+    for tempList in solutions:
+        tempList.sort()
+        tupleList.append(tuple(list))
+
+    
+    finalList = list(set(tupleList))
+
+    print(f"FINAL LIST OF SOLUTIONS: {str(finalList)}")
+
+    
 
 def discoverWord(word, position, puzzle):
     if not letterExists(word):
@@ -46,7 +61,7 @@ def discoverWord(word, position, puzzle):
     for i in range(position, position + 9):
         discoverWord(word + puzzle[i%12], i%12, puzzle)
 
-
+# read from dictionary file and populate trie with words
 def buildDict(filename):
     counter = 0
     with open(filename) as file:
@@ -55,6 +70,7 @@ def buildDict(filename):
             insert(word.rstrip())
             counter += 1
 
+# insert word into trie
 def insert(word):
     current = list 
     for letter in word:
@@ -64,8 +80,9 @@ def insert(word):
         current = current.next[index]
     current.leaf = True
 
+
+# traverse down word tree and check if where you land is a leaf
 def wordIsLeaf(word):
-    # traverse down word tree and check if where you land is a leaf
     current = list 
     for letter in word:
         index = ord(letter) - ord('a')
@@ -74,11 +91,11 @@ def wordIsLeaf(word):
         current = current.next[index]
     return current.leaf
 
+# similar to wordIsLeaf(word) but not the same.  if node you land on is the end of a valid word, return true.  
+# does not indicate anything about leaf status though this function must also not crash when word is 
+# nonsense (handle null pointer errors!)
+# Note: words that are passed in here will frequently be partial words, hence 'wor'
 def letterExists(wor):
-    # similar but not the same.  if node you land on is the end of a valid word, return true.  does not indicate anything about leaf status though
-    # this function must also not crash when word is nonsense (handle null pointer errors!)
-    # traverse down word tree and check if where you land is a leaf
-    # Note: words that are passed in here will frequently be partial words, hence 'wor'
     current = list 
     for letter in wor:
         index = ord(letter) - ord('a')
@@ -86,6 +103,52 @@ def letterExists(wor):
             return False
         current = current.next[index]
     return current != None
+
+# ==========
+
+def findChain(chain, bank, depth, puzzle):
+
+    if len(chain) > depth:
+        return
+
+    # print(f"checking solution {str(chain)}...")
+    # pdb.set_trace()
+    if checkSolution(chain, puzzle):
+        print(f"solution found! {str(chain)}")
+        temp = chain.copy()
+        solutions.append(temp)
+        # pdb.set_trace()
+        return
+
+    for word in bank:
+        lastLetter = chain[-1][-1]
+        
+        if word in chain:
+            continue
+
+        nextWord = None
+        if lastLetter == word[0]:
+            nextWord = word
+        if not nextWord:
+            continue
+        chain.append(nextWord)
+        findChain(chain, bank, depth, puzzle)
+        chain.remove(nextWord)
+
+
+
+
+
+# given an array of words, ensure they use every letter of the puzzle
+def checkSolution(words, puzzle):
+    # pdb.set_trace()
+    combined = "".join(words)
+    # print(f"comparing chain {str(words)} to puzzle {puzzle}...")
+    for letter in puzzle: 
+        if letter not in combined:
+            return False
+    return True
+
 
 main()
 
