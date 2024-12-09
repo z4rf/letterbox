@@ -1,5 +1,6 @@
 import pdb
 import time
+import sys
 
 class node:
     def __init__(self): 
@@ -16,37 +17,32 @@ def main():
     # wordlist sourced from: https://github.com/dwyl/english-words
     buildDict("popular.txt")
 
-    # ingest puzzle sides
-    # puzzle = input("Enter puzzle letters, begin from top left corner: ")
-    puzzle = "tlqsrubfiemo"
-    # numWords = input("Enter maximum number of words allowed in guess: ")
-    numWords = 4
+    puzzle = sys.argv[1]
+    numWords = int(sys.argv[2])
 
     # follow game logic, recursively test each path
     for i in range (0, 12):
         discoverWord(puzzle[i], i, puzzle)
 
-    print(f"list of viable words: {viableWords}")
+    # print(f"list of viable words: {viableWords}")
     
     for i in range(0, numWords):
-        print(f"trying chains of length {i}...")
+        # print(f"trying chains of length {i}...")
         for word in viableWords:
             findChain([word], viableWords, i, puzzle)
         if len(solutions) > 0:
+            print(f"shortest solutions of length {i+1} found: ")
             break
     
-    print("shortest solutions found:")
-
-    # pdb.set_trace()
+    # convert to set and back to remove duplicate entries (which are lists) from solution list
     tupleList = []
     for tempList in solutions:
         tempList.sort()
         tupleList.append(tuple(tempList))
-
     
     finalList = list(set(tupleList))
 
-    print(f"FINAL LIST OF SHORTEST SOLUTIONS: {str(finalList)}")
+    print(str(finalList))
 
     
 
@@ -68,7 +64,7 @@ def buildDict(filename):
     counter = 0
     with open(filename) as file:
         for word in file:
-            if counter % 10000 == 0: print(f"inserting {'{:,}'.format(counter)}th word {word.rstrip()} into trie...")
+            # if counter % 10000 == 0: print(f"inserting {'{:,}'.format(counter)}th word {word.rstrip()} into trie...")
             insert(word.rstrip())
             counter += 1
 
@@ -109,17 +105,13 @@ def letterExists(wor):
 # ==========
 
 def findChain(chain, bank, depth, puzzle):
-
     if len(chain) > depth:
         return
 
-    # print(f"checking solution {str(chain)}...")
-    # pdb.set_trace()
     if checkSolution(chain, puzzle):
-        print(f"solution found! {str(chain)}")
+        # print(f"solution found! {str(chain)}")
         temp = chain.copy()
         solutions.append(temp)
-        # pdb.set_trace()
         return
 
     for word in bank:
@@ -137,15 +129,9 @@ def findChain(chain, bank, depth, puzzle):
         findChain(chain, bank, depth, puzzle)
         chain.remove(nextWord)
 
-
-
-
-
 # given an array of words, ensure they use every letter of the puzzle
 def checkSolution(words, puzzle):
-    # pdb.set_trace()
     combined = "".join(words)
-    # print(f"comparing chain {str(words)} to puzzle {puzzle}...")
     for letter in puzzle: 
         if letter not in combined:
             return False
